@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,7 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.olx.dto.Advertise;
+import com.olx.exception.FromDateMissingException;
+import com.olx.exception.InvalidAdvertiseIdException;
+import com.olx.exception.InvalidAuthTokenException;
+import com.olx.exception.InvalidCategoryIdException;
+import com.olx.exception.InvalidPageIdException;
+import com.olx.exception.InvalidStatusIdException;
+import com.olx.exception.OnDateMissingException;
+import com.olx.exception.ToDateMissingException;
+import com.olx.exception.UserNameDoesNotExistException;
 import com.olx.service.AdvertiseService;
+
 
 import io.swagger.annotations.ApiOperation;
 
@@ -28,6 +41,52 @@ public class AdvertiseController {
 
 	@Autowired
 	AdvertiseService advertiseService;
+	
+	@ExceptionHandler(value = InvalidAuthTokenException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionAuthToken(InvalidAuthTokenException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = InvalidAdvertiseIdException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionInvalidAdvId(InvalidAdvertiseIdException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = UserNameDoesNotExistException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionUserName(UserNameDoesNotExistException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = OnDateMissingException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionOnDate(OnDateMissingException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = FromDateMissingException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionFromDate(FromDateMissingException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = ToDateMissingException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionToDate(ToDateMissingException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = InvalidPageIdException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionInvalidPageId(InvalidPageIdException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = InvalidCategoryIdException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionInvalidCatId(InvalidCategoryIdException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = InvalidStatusIdException.class) // Local Exception Handler
+	public ResponseEntity<String> handleExceptionStatusId(InvalidStatusIdException exception) {
+		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
+	}
+	
 
 	@PostMapping(value = "", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
@@ -74,20 +133,6 @@ public class AdvertiseController {
 		return advertiseService.searchAdvertisesByFilterCriteria(searchText, categoryId, postedBy, dateCondition,
 				onDate, fromDate, toDate, sortedBy, startIndex, records);
 	}
-
-//	GetMapping(value="/search/filtercriteria", produces=MediaType.APPLICATION_JSON_VALUE)
-//	public List<AdvertiseDTO> searchAdvertisesByFilterCriteria(@RequestParam(name="searchText", required = false)String searchText,
-//	@RequestParam(name = "category", required = false, defaultValue = "0")int categoryId, @RequestParam(name="postedBy", required=false)String postedBy,
-//	@RequestParam(name="dateCondition", required=false)String dateCondition,
-//	@RequestParam(name="onDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate onDate,
-//	@RequestParam(name="fromDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-//	@RequestParam(name="toDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-//	@RequestParam(name="sortedBy", required=false)String sortedBy, @RequestParam(name = "startIndex", defaultValue="0")int startIndex, @RequestParam(name="records", defaultValue = "10")int records
-//	) {
-//	List<AdvertiseDTO> advertises = advertiseService.searchAdvertisesByFilterCriteria(searchText, categoryId, postedBy, dateCondition,
-//	onDate, fromDate, toDate, sortedBy, startIndex, records);
-//	return advertises;
-//	}
 
 	@GetMapping(value = "/{advertiseId}", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })

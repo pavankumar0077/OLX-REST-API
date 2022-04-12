@@ -2,13 +2,17 @@ package com.olx.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.olx.dto.Advertise;
+import com.olx.entity.AdvertiseEntity;
 
 @Service
 public class AdvertiseServiceImpl implements AdvertiseService {
@@ -49,7 +53,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<AdvertiseEntity> criteriaQuery = criteriaBuilder.createQuery(AdvertiseEntity.class);
-		Root<AdvertiseEntity> rootEntity = criteriaQuery.from(AdvertiseEntity.class);
+		Root<AdvertiseEntity> rootEntity = CriteriaQuery.from(AdvertiseEntity.class);
 		
 		Predicate predicateTitle = criteriaBuilder.and();
 		Predicate predicateDescription = criteriaBuilder.and();
@@ -68,22 +72,22 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		}
 		
 		if (postedBy != null && !"".equalsIgnoreCase(postedBy)) {
-			predicatePostedBy = criteriaBuilder.equal(root.get(""), PostedBy);
+			predicatePostedBy = criteriaBuilder.equal(rootEntity.get(""), PostedBy);
 		}
 		
 		if(dateCondition != null && dateCondition.contains("equal")) {
-			predicateDateCondition = criteriaBuilder.equal(root.get("createDate"),onDate);
+			predicateDateCondition = criteriaBuilder.equal(rootEntity.get("createDate"),onDate);
 		}
 		
 		if(categoryId > 0) {
-			predicateCategory = criteriaBuilder.equal(root.get("category"), categoryId);
+			predicateCategory = criteriaBuilder.equal(rootEntity.get("category"), categoryId);
 		}
 		
 		//Write a code to create predicates for dateConditions, categoryId, posted_by etc.
 		predicateFinal = criteriaBuilder.and(predicateSearchText, predicateCategory, predicateDateCondition,
 		predicatePostedBy);
 		criteriaQuery.where(predicateFinal);
-		TypedQuery<AdvertiseEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		TypedQuery<AdvertiseEntity> typedQuery = EntityManager.createQuery(criteriaQuery);
 		typedQuery.setFirstResult(startIndex);
 		typedQuery.setMaxResults(records);
 		
