@@ -3,6 +3,8 @@ package com.zensar.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.zensar.dto.User;
 
 public interface LoginService {
@@ -10,6 +12,8 @@ public interface LoginService {
 
 	public boolean logout(String authToken);
 
+//	public ResponseEntity<User> registerUs(User user);
+	
 	public User registerUser(User user);
 
 	public User getUserById(int id);
