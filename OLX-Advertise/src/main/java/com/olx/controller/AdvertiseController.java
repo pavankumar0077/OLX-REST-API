@@ -31,7 +31,6 @@ import com.olx.exception.ToDateMissingException;
 import com.olx.exception.UserNameDoesNotExistException;
 import com.olx.service.AdvertiseService;
 
-
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -41,52 +40,51 @@ public class AdvertiseController {
 
 	@Autowired
 	AdvertiseService advertiseService;
-	
+
 	@ExceptionHandler(value = InvalidAuthTokenException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionAuthToken(InvalidAuthTokenException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = InvalidAdvertiseIdException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionInvalidAdvId(InvalidAdvertiseIdException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = UserNameDoesNotExistException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionUserName(UserNameDoesNotExistException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = OnDateMissingException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionOnDate(OnDateMissingException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = FromDateMissingException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionFromDate(FromDateMissingException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = ToDateMissingException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionToDate(ToDateMissingException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = InvalidPageIdException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionInvalidPageId(InvalidPageIdException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = InvalidCategoryIdException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionInvalidCatId(InvalidCategoryIdException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ExceptionHandler(value = InvalidStatusIdException.class) // Local Exception Handler
 	public ResponseEntity<String> handleExceptionStatusId(InvalidStatusIdException exception) {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
-	
 
 	@PostMapping(value = "", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
@@ -118,20 +116,21 @@ public class AdvertiseController {
 		return advertiseService.deleteAdvertise(adv);
 	}
 
-	@GetMapping(value = "/search/filtercriteria", produces = { MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
-	@ApiOperation(value = "Reads advertisements based on filter", notes = "This REST API returns all the advertisements on applied filter")
-	public List<Advertise> searchAdvertisesByFilterCriteria(@RequestParam("searchText") String searchText,
-			@RequestParam(name = "category", required = false) int categoryId,
-			@RequestParam("postedBy") String postedBy, @RequestParam("dateCondition") String dateCondition,
-			@RequestParam("onDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate onDate,
-			@RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-			@RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-			@RequestParam("sortedBy") String sortedBy,
+	@GetMapping(value = "/search/filtercriteria", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Getting a List of Avertise by FilterCriteria", notes = "This Rest API will return List of Advertise by Filter Criteria")
+	public List<Advertise> searchAdvertisesByFilterCriteria(
+			@RequestParam(name = "searchText", required = false) String searchText,
+			@RequestParam(name = "category", required = false) Integer categoryId,
+			@RequestParam(name = "postedBy", required = false) String postedBy,
+			@RequestParam(name = "dateCondition", required = false) String dateCondition,
+			@RequestParam(name = "onDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate onDate,
+			@RequestParam(name = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam(name = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+			@RequestParam(name = "sortedBy", required = false) String sortedBy,
 			@RequestParam(name = "startIndex", defaultValue = "0") int startIndex,
 			@RequestParam(name = "records", defaultValue = "10") int records) {
-		return advertiseService.searchAdvertisesByFilterCriteria(searchText, categoryId, postedBy, dateCondition,
-				onDate, fromDate, toDate, sortedBy, startIndex, records);
+		return advertiseService.filterAdvertise(searchText, categoryId, postedBy, dateCondition, onDate, fromDate,
+				toDate, sortedBy, startIndex, records);
 	}
 
 	@GetMapping(value = "/{advertiseId}", produces = { MediaType.APPLICATION_XML_VALUE,

@@ -2,8 +2,6 @@ package com.olx.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -15,32 +13,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel(value = "ADVERTISE DTO")
 public class Advertise {
-	
-	@ApiModelProperty(value = "ID")
+
+	@ApiModelProperty(value = "Id")
 	private long id;
-	
 	@ApiModelProperty(value = "Title")
 	private String title;
-	
-	@ApiModelProperty(value = "Description")
+	@ApiModelProperty(value = "description")
 	private String description;
-	
-	@ApiModelProperty(value = "Price")
+	@ApiModelProperty(value = "price")
 	private double price;
-	
-	@ApiModelProperty(value = "Category")
+	@ApiModelProperty(value = "category")
 	private long category;
-	
-	@ApiModelProperty(value = "created_date")
+	@ApiModelProperty(value = "createdDate")
 	private LocalDate createdDate;
-	
-	@ApiModelProperty(value = "modified_date")
+	@ApiModelProperty(value = "modifiedDate")
 	private LocalDate modifiedDate;
-	
-	@ApiModelProperty(value = "Active")
+	@ApiModelProperty(value = "active")
 	private String active;
-	
-	
 	@ApiModelProperty(value = "username")
 	private String username;
 
