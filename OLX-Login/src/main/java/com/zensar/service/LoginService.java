@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.zensar.dto.User;
 
 public interface LoginService {
+	
 	public String authenticate(User user);
 
 	public boolean logout(String authToken);

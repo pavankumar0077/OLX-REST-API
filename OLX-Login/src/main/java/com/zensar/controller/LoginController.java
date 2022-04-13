@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,11 +42,13 @@ public class LoginController {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.FORBIDDEN);
 	}
 	
+
+	
 	// 1
 //	@PostMapping(value = "/user/authenticate", consumes = { MediaType.APPLICATION_JSON_VALUE,
 //			MediaType.APPLICATION_XML_VALUE })
 //	@ApiOperation(value = "user Auth", notes = "authenticating a user using tokens")
-//	public String authenticate(@RequestBody User user) {
+//	public String authenticate(@RequestBody User user) throws AuthenticationException {
 //		return loginService.authenticate(user);
 //	}
 	
@@ -58,7 +61,10 @@ public class LoginController {
 		return new ResponseEntity<String>(loginService.authenticate(user), HttpStatus.OK);
 	}
 	
-	
+//	@PostMapping(value = "/user/authenticate")
+//	public String authenticate(@RequestBody User user) throws AuthenticationException {
+//		return loginService.authenticate(user);
+//		}
 
 //	@DeleteMapping(value = "/user/logout")
 //	@ApiOperation(value = "logs out  a user", notes = "logs out a user session")

@@ -1,19 +1,19 @@
 package com.zensar.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import com.zensar.dto.User;
 import com.zensar.entity.UserEntity;
+import com.zensar.exception.InvalidCredentialsException;
 import com.zensar.repository.UserRepo;
-
-
+import com.zensar.security.JwtUtil;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -24,10 +24,26 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	ModelMapper modelMapper;
 
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	JwtUtil jwtUtil;
+
 	@Override
 	public String authenticate(User user) {
-		return "kjf34t";
+		try {
+			this.authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
 
+		}
+		
+		catch(AuthenticationException ex) {
+			throw new InvalidCredentialsException(ex.toString());
+		}
+		
+		String jwt = jwtUtil.generateToken(user.getUserName());
+		return jwt;
 	}
 
 	@Override
@@ -42,7 +58,6 @@ public class LoginServiceImpl implements LoginService {
 		userEntity = userRepo.save(userEntity);
 		return convertEntityIntoDTO(userEntity);
 	}
-
 
 	// get a user
 	@Override
@@ -71,7 +86,8 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public User getUser(String authToken) {
-		UserEntity userentity = userRepo.findByFirstName(authToken);
+		String username = jwtUtil.extractUsername(authToken);
+		UserEntity userentity = userRepo.findByFirstName(username);
 		return convertEntityIntoDTO(userentity);
 	}
 
