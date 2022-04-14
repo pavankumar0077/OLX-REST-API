@@ -4,6 +4,7 @@ package com.zensar.service;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.zensar.dto.User;
 
@@ -20,8 +21,10 @@ public interface LoginService {
 	public User getUserById(int id);
 	
 	public User getUser(String authToken);
+	
+	
 
-	public String validateToken(String authToken);
+	public boolean validateToken(String authToken);
 
 //	public User getUser();
 

@@ -8,8 +8,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import io.jsonwebtoken.SignatureException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler(value = SignatureException.class)
+	public ResponseEntity<Object> handleInvalidToken(RuntimeException ex, WebRequest request) {
+		return handleExceptionInternal(ex, ex.toString(), new HttpHeaders(), HttpStatus.OK, request);
+	}
 	
 	@ExceptionHandler(value = InvalidCredentialsException.class)
 	public ResponseEntity<Object> handleConflict(RuntimeException exception, WebRequest request) {

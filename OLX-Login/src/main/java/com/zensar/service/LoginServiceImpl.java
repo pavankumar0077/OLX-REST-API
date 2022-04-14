@@ -1,17 +1,22 @@
 package com.zensar.service;
 
-
+import java.time.LocalDate;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.zensar.dto.User;
+import com.zensar.entity.BlackListedTokensDocument;
 import com.zensar.entity.UserEntity;
+import com.zensar.exception.InvalidAuthTokenException;
 import com.zensar.exception.InvalidCredentialsException;
+import com.zensar.repository.UserMongoRepo;
 import com.zensar.repository.UserRepo;
 import com.zensar.security.JwtUtil;
 
@@ -22,13 +27,22 @@ public class LoginServiceImpl implements LoginService {
 	UserRepo userRepo;
 
 	@Autowired
+	UserMongoRepo userMongoRepo;
+
+	@Autowired
 	ModelMapper modelMapper;
 
 	@Autowired
 	AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	JwtUtil jwtUtil;
+
+//	@Autowired
+	UserDetails userDetails;
+
+	@Autowired
+	UserDetailsService userDetailsService;
 
 	@Override
 	public String authenticate(User user) {
@@ -37,18 +51,38 @@ public class LoginServiceImpl implements LoginService {
 					.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
 
 		}
-		
-		catch(AuthenticationException ex) {
+
+		catch (AuthenticationException ex) {
 			throw new InvalidCredentialsException(ex.toString());
 		}
-		
+
 		String jwt = jwtUtil.generateToken(user.getUserName());
 		return jwt;
 	}
 
+//	@Override
+//	public boolean logout(String authToken) {
+//		UserDocument userDocument = userMongoRepo.findByToken(authToken);
+//		if (userDocument != null) {
+//			return false;
+//		}
+//		UserDocument newToken = new UserDocument(authToken, LocalDate.now());
+//		userDocument.save(newToken);
+//		return true;
+//
+//	}
+
 	@Override
 	public boolean logout(String authToken) {
-		return true;
+		String token = authToken.substring(7);
+		BlackListedTokensDocument bts = userMongoRepo.findByToken(token);
+		if (bts == null) {
+			BlackListedTokensDocument newBts = new BlackListedTokensDocument(token, LocalDate.now());
+			userMongoRepo.save(newBts);
+			return true;
+		}
+
+		throw new InvalidAuthTokenException();
 
 	}
 
@@ -68,8 +102,15 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public String validateToken(String authToken) {
-		return authToken;
+	public boolean validateToken(String authToken) {
+		try {
+			authToken = authToken.substring(7);
+			String username = jwtUtil.extractUsername(authToken);
+			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+			return jwtUtil.validateToken(authToken, userDetails);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private UserEntity convertDTOIntoEntity(User user) {
@@ -86,8 +127,8 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public User getUser(String authToken) {
-		String username = jwtUtil.extractUsername(authToken);
-		UserEntity userentity = userRepo.findByFirstName(username);
+//		String username = jwtUtil.extractUsername(authToken);
+		UserEntity userentity = userRepo.findByFirstName(authToken);
 		return convertEntityIntoDTO(userentity);
 	}
 
