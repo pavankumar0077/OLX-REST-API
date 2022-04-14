@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ADVERTISES")
+@Table(name = "ADVERTISE")
 public class AdvertiseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -26,11 +26,15 @@ public class AdvertiseEntity {
 	private String description;
 	private double price;
 	private long category;
+	
 	@Column(name = "created_date")
 	private LocalDate createdDate;
+	
 	@Column(name = "modified_date")
 	private LocalDate modifiedDate;
+	
 	private String active;
+	
 	@Column(name = "username")
 	private String username;
 }

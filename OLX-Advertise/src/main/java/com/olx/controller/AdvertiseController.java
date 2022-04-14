@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,12 +87,19 @@ public class AdvertiseController {
 		return new ResponseEntity<String>(exception.toString(), HttpStatus.BAD_REQUEST);
 	}
 
-	@PostMapping(value = "", consumes = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_VALUE })
-	@ApiOperation(value = "Post Advertisement", notes = "This REST API is used to post advertisements")
-	public Advertise postAdvertise(@RequestHeader("auth-token") String authToken, Advertise adv) {
-		return advertiseService.postAdvertise(adv);
+//	@PostMapping(value = "", consumes = { MediaType.APPLICATION_JSON_VALUE,
+//			MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_JSON_VALUE })
+//	@ApiOperation(value = "Post Advertisement", notes = "This REST API is used to post advertisements")
+//	public Advertise postAdvertise(@RequestHeader("auth-token") String authToken, Advertise adv) {
+//		return advertiseService.postAdvertise(adv);
+//	}
+
+	@PostMapping(value = "/postAd", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Advertise> createNewAdvertise(@RequestBody Advertise advertise,
+			@RequestHeader("Authorization") String authToken) {
+		Advertise advertises = this.advertiseService.createNewAdvertise(advertise, authToken);
+		return new ResponseEntity<Advertise>(advertise, HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE,

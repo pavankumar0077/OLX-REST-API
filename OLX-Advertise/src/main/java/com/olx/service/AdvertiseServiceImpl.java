@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.olx.dto.Advertise;
 import com.olx.entity.AdvertiseEntity;
+import com.olx.exception.InvalidAuthTokenException;
 import com.olx.repository.AdvertiseRepo;
 
 
@@ -57,6 +58,9 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	ModelMapper modelMapper;
 	@Autowired
 	AdvertiseRepo advertiseRepo;
+	
+	@Autowired
+	LoginServiceDelegate loginServiceDelegate;
 
 	@Override
 	public List<Advertise> filterAdvertise(String searchText, Integer categoryId, String postedBy, String dateCondition,
@@ -167,6 +171,16 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	@Override
 	public boolean deleteAdvertise(Advertise adv) {
 		return true;
+	}
+
+	@Override
+	public Advertise createNewAdvertise(Advertise advertise, String authToken) {
+		if(loginServiceDelegate.isTokenValid(authToken)) {
+			return advertise;
+		}
+		else {
+			throw new InvalidAuthTokenException(authToken);
+		}
 	}
 
 	
