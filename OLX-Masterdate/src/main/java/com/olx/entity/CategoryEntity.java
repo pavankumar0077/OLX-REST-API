@@ -20,5 +20,6 @@ public class CategoryEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String category_name;
+	private String name;
+	private String description;
 }

@@ -16,6 +16,6 @@ public class Status {
 	@ApiModelProperty(value = "Status Id")
 	private int id;
 	
-	@ApiModelProperty(value = " Status Name ")
-	private String statusName;
+	@ApiModelProperty(value = " Status ")
+	private String status;
 }

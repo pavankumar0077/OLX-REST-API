@@ -17,6 +17,9 @@ public class Category {
 	private int id;
 	
 	@ApiModelProperty(value = "Category Name")
-	private String category_Name;
+	private String name;
+	
+	@ApiModelProperty(value = "Category Description")
+	private String description;
 
 }

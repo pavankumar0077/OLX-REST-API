@@ -49,25 +49,25 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	private CategoryEntity convertDTOIntoEntity(Category category) {
-		TypeMap<Category, CategoryEntity> tMap = modelMapper.typeMap(Category.class, CategoryEntity.class);
+//		TypeMap<Category, CategoryEntity> tMap = modelMapper.typeMap(Category.class, CategoryEntity.class);
 		CategoryEntity categoryEntity = modelMapper.map(category, CategoryEntity.class);
 		return categoryEntity;
 	}
 
 	private Category convertEntityIntoDTO(CategoryEntity categoryEntity) {
-		TypeMap<CategoryEntity, Category> tMap = modelMapper.typeMap(CategoryEntity.class, Category.class);
+//		TypeMap<CategoryEntity, Category> tMap = modelMapper.typeMap(CategoryEntity.class, Category.class);
 		Category category = modelMapper.map(categoryEntity, Category.class);
 		return category;
 	}
 
 	private StatusEntity convertDTOIntoEntity2(Status status) {
-		TypeMap<Status, StatusEntity> tMap = modelMapper.typeMap(Status.class, StatusEntity.class);
+//		TypeMap<Status, StatusEntity> tMap = modelMapper.typeMap(Status.class, StatusEntity.class);
 		StatusEntity statusEntity = modelMapper.map(status, StatusEntity.class);
 		return statusEntity;
 	}
 
 	private Status convertEntityIntoDTO2(StatusEntity statusEntity) {
-		TypeMap<StatusEntity, Status> tMap = modelMapper.typeMap(StatusEntity.class, Status.class);
+//		TypeMap<StatusEntity, Status> tMap = modelMapper.typeMap(StatusEntity.class, Status.class);
 		Status status = modelMapper.map(statusEntity, Status.class);
 		return status;
 	}

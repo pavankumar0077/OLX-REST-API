@@ -17,6 +17,6 @@ public class StatusEntity {
 	@Id
 	private int id;
 
-	private String statusName;
+	private String status;
 
 }
