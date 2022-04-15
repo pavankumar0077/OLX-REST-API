@@ -1,5 +1,7 @@
 package com.zensar.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -112,8 +114,8 @@ public class LoginController {
 	// With Code
 	@GetMapping(value = "/user", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ApiOperation(value = "Getting a User Information", notes = "This Rest API helps to get Authenticated User Data")
-	public ResponseEntity<User> getUser(@RequestHeader("auth-token") String authToken) {
-		return new ResponseEntity<User>(loginService.getUser(authToken), HttpStatus.OK);
+	public ResponseEntity<List> getUser(@RequestHeader("Authorization") String authToken) {
+		return new ResponseEntity<List>(loginService.getUser(authToken), HttpStatus.OK);
 	}
 
 //	@GetMapping(value = "/token/validate", produces = { MediaType.APPLICATION_JSON_VALUE,

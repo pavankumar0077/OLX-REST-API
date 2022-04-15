@@ -20,7 +20,7 @@ public interface LoginService {
 
 	public User getUserById(int id);
 	
-	public User getUser(String authToken);
+	public List getUser(String authToken);
 	
 	
 

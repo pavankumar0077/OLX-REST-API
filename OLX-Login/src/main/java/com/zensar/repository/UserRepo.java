@@ -10,7 +10,9 @@ public interface UserRepo extends JpaRepository<UserEntity, Integer> {
 
 	UserEntity findByFirstName(String authToken);
 
-	List<UserEntity> findByUserName(String username);
+	List<UserEntity> findByUserName(String authToken);
+
+//	List<UserEntity> findByUserName(String username);
 	
 	
 	

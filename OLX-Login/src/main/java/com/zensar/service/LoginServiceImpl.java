@@ -1,8 +1,11 @@
 package com.zensar.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -114,23 +117,70 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	private UserEntity convertDTOIntoEntity(User user) {
-//		TypeMap<User, UserEntity> tMap = modelMapper.typeMap(User.class, UserEntity.class);
+		TypeMap<User, UserEntity> tMap = modelMapper.typeMap(User.class, UserEntity.class);
 		UserEntity userEntity = modelMapper.map(user, UserEntity.class);
 		return userEntity;
 	}
+	
+//	private List<Advertise> convertEntityListIntoDTOList(List<AdvertiseEntity> advertiseEntityList) {
+//		// return new StockEntity(stock.getId(), stock.getName(), stock.getMarket(),
+//		// stock.getPrice());
+//		List<Advertise> advertisesList = new ArrayList<>();
+//		for(AdvertiseEntity advertiseEntity : advertiseEntityList)
+//		{
+//		TypeMap<AdvertiseEntity, Advertise> typeMap = modelMapper.typeMap(AdvertiseEntity.class, Advertise.class);
+//		Advertise advertise = modelMapper.map(advertiseEntity, Advertise.class);
+//		advertisesList.add(advertise);
+//		}
+//
+//		return advertisesList;
+	
+	private List<User> convertEntityListIntoDTOList(List<UserEntity> userEntityList) {
+		List<User> userList = new ArrayList<>();
+		for (UserEntity userEntity : userEntityList ) {
+			TypeMap<UserEntity, User> typeMap = modelMapper.typeMap(UserEntity.class, User.class);
+			User user = modelMapper.map(userEntity, User.class);
+			userList.add(user);
+		}
+		return userList;	
+		
+	}
+	
+	private List<UserEntity> convertDTOListIntoEntityList(List<User> userList) {
+		List<UserEntity> userEntityList = new ArrayList<>();
+		for (User user : userList ) {
+			TypeMap<User, UserEntity> typeMap = modelMapper.typeMap(User.class, UserEntity.class);
+			UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+			userList.add(user);
+		}
+		return userEntityList;	
+		
+	}
+	
+	
+	
 
 	private User convertEntityIntoDTO(UserEntity userEntity) {
-//		TypeMap<UserEntity, User> tMap = modelMapper.typeMap(UserEntity.class, User.class);
+		TypeMap<UserEntity, User> tMap = modelMapper.typeMap(UserEntity.class, User.class);
 		User user = modelMapper.map(userEntity, User.class);
 		return user;
 	}
 
+//	@Override
+//	public User getUser(String authToken) {
+//		UserEntity userentity = userRepo.findByFirstName(authToken);
+//		return convertEntityIntoDTO(userentity);
+//	}
+	
 	@Override
-	public User getUser(String authToken) {
-//		String username = jwtUtil.extractUsername(authToken);
-		UserEntity userentity = userRepo.findByFirstName(authToken);
-		return convertEntityIntoDTO(userentity);
+	public List<User> getUser(String authToken) {
+		authToken = authToken.substring(7);
+		String username = jwtUtil.extractUsername(authToken);
+		List<UserEntity> userentity =  userRepo.findByUserName(username);
+		return convertEntityListIntoDTOList(userentity);
 	}
+	
+	
 
 //  @Override
 //  public User getUser() {
