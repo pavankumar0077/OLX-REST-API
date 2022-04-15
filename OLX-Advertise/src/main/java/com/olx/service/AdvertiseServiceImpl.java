@@ -24,11 +24,29 @@ import com.olx.repository.AdvertiseRepo;
 
 @Service
 public class AdvertiseServiceImpl implements AdvertiseService {
+	
+	@Autowired
+	EntityManager entityManager; // JPA
+	
+	@Autowired
+	ModelMapper modelMapper;
+	
+	@Autowired
+	AdvertiseRepo advertiseRepo;
+	
+	@Autowired
+	LoginServiceDelegate loginServiceDelegate;
+	
+//	@Override
+//	public Stock createNewStock(Stock stock) {
+//		StockEntity stockEntity = convertDTOIntoEntity(stock);
+//		stockEntity = stockRepo.save(stockEntity);
+//		return convertEntityIntoDTO(stockEntity);
+//	}
+	
+	
 
-	@Override
-	public Advertise postAdvertise(Advertise adv) {
-		return null;
-	}
+	
 
 	@Override
 	public Advertise updateAdvertise(Advertise adv) {
@@ -51,16 +69,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 //		return null;
 //	}
 
-	@Autowired
-	EntityManager entityManager; // JPA
 	
-	@Autowired
-	ModelMapper modelMapper;
-	@Autowired
-	AdvertiseRepo advertiseRepo;
-	
-	@Autowired
-	LoginServiceDelegate loginServiceDelegate;
 
 	@Override
 	public List<Advertise> filterAdvertise(String searchText, Integer categoryId, String postedBy, String dateCondition,
@@ -172,17 +181,49 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	public boolean deleteAdvertise(Advertise adv) {
 		return true;
 	}
+	
+//	@Override
+//	public Advertise postAdvertise(Advertise adv) {
+//		AdvertiseEntity advertiseEntity = convertDTOIntoEntity(adv);
+//		advertiseEntity = advertiseRepo.save(advertiseEntity);
+//		return convertEntityIntoDTO(advertiseEntity);
+//	}
 
 	@Override
 	public Advertise createNewAdvertise(Advertise advertise, String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
-			return advertise;
+			AdvertiseEntity advertiseEntity = convertDTOIntoEntity(advertise);
+			advertiseEntity = advertiseRepo.save(advertiseEntity);
+			return convertEntityIntoDTO(advertiseEntity);
+//			return advertise;
 		}
 		else {
 			throw new InvalidAuthTokenException(authToken);
 		}
 	}
 
-	
+	private AdvertiseEntity convertDTOIntoEntity(Advertise adv) {
+//		TypeMap<Stock, AdvertiseEntity> typeMap = modelMapper.typeMap(Stock.class, AdvertiseEntity.class);
+//		typeMap.addMappings(mapper -> {
+//			mapper.map(stockDto -> stockDto.getMarket(), StockEntity::setMarketname);
+//		});
+		AdvertiseEntity advertiseEntity = modelMapper.map(adv, AdvertiseEntity.class);
+		return advertiseEntity;
+	}
+
+	private Advertise convertEntityIntoDTO(AdvertiseEntity advertiseEntity) {
+//		TypeMap<StockEntity, Advertise> typeMap = modelMapper.typeMap(StockEntity.class, Stock.class);
+//		typeMap.addMappings(mapper -> {
+//			mapper.map(stockentity -> stockEntity.getMarketname(), Stock::setMarket);
+//		});
+		Advertise adv = modelMapper.map(advertiseEntity, Advertise.class);
+		return adv;
+	}
+
+	@Override
+	public Advertise postAdvertise(Advertise adv) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

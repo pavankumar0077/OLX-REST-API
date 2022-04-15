@@ -25,7 +25,8 @@ public class AdvertiseEntity {
 	private String title;
 	private String description;
 	private double price;
-	private long category;
+	private long categoryId;
+	private String category;
 	
 	@Column(name = "created_date")
 	private LocalDate createdDate;

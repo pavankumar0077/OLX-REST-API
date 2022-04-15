@@ -16,20 +16,31 @@ public class Advertise {
 
 	@ApiModelProperty(value = "Id")
 	private long id;
+	
 	@ApiModelProperty(value = "Title")
 	private String title;
+	
 	@ApiModelProperty(value = "description")
 	private String description;
+	
 	@ApiModelProperty(value = "price")
 	private double price;
-	@ApiModelProperty(value = "category")
-	private long category;
+	
+	@ApiModelProperty(value = "category_Id")
+	private long categoryId;
+	
+	@ApiModelProperty(value = "category_name")
+	private String category;
+	
 	@ApiModelProperty(value = "createdDate")
 	private LocalDate createdDate;
+	
 	@ApiModelProperty(value = "modifiedDate")
 	private LocalDate modifiedDate;
+	
 	@ApiModelProperty(value = "active")
 	private String active;
+	
 	@ApiModelProperty(value = "username")
 	private String username;
 
